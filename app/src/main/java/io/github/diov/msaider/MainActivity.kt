@@ -5,6 +5,13 @@ import androidx.appcompat.app.AppCompatActivity
 import com.google.android.material.bottomnavigation.BottomNavigationView
 import kotlinx.android.synthetic.main.activity_main.*
 
+/**
+ * MSAider
+ *
+ * Created by Dio_V on 2019-03-23.
+ * Copyright © 2019 diov.github.io. All rights reserved.
+ */
+
 class MainActivity : AppCompatActivity() {
 
     private val mOnNavigationItemSelectedListener = BottomNavigationView.OnNavigationItemSelectedListener { item ->

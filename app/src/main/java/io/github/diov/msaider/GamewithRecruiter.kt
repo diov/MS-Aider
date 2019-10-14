@@ -1,6 +1,9 @@
 package io.github.diov.msaider
 
 import android.webkit.WebSettings
+import com.squareup.moshi.Json
+import com.squareup.moshi.JsonClass
+import com.squareup.moshi.Moshi
 import okhttp3.Call
 import okhttp3.Callback
 import okhttp3.Headers
@@ -19,12 +22,16 @@ import java.io.IOException
 
 class GamewithRecruiter {
 
+    private val resultAdapter by lazy {
+        val moshi = Moshi.Builder().build()
+        moshi.adapter(RecruitResult::class.java)
+    }
     private val client = OkHttpClient()
     private val userAgent by lazy {
         WebSettings.getDefaultUserAgent(AiderApp.app)
     }
 
-    fun recuite(order: String, type: RecruitType, callback: ((Outcome<Unit>) -> Unit)? = null) {
+    fun recruit(order: String, type: RecruitType, callback: ((Outcome<RecruitResult>) -> Unit)? = null) {
         val request = generateRequest(order, type)
         client.newCall(request).enqueue(object : Callback {
             override fun onFailure(call: Call, e: IOException) {
@@ -32,7 +39,13 @@ class GamewithRecruiter {
             }
 
             override fun onResponse(call: Call, response: Response) {
-                callback?.invoke(Outcome.success(Unit))
+                try {
+                    val body = requireNotNull(response.body?.string())
+                    val result = requireNotNull(resultAdapter.fromJson(body))
+                    callback?.invoke(Outcome.success(result))
+                } catch (e: Exception) {
+                    callback?.invoke(Outcome.failure(e))
+                }
             }
         })
     }
@@ -63,7 +76,16 @@ class GamewithRecruiter {
 }
 
 enum class RecruitType(val tag: String) {
-    maxLuck("僅限極運"),
-    onlyCorrect("僅限適正角色"),
-    anyOne("誰都可以")
+    MAX_LUCK("僅限極運"),
+    ONLY_CORRECT("僅限適正角色"),
+    ANYONE("誰都可以")
 }
+
+@JsonClass(generateAdapter = true)
+data class RecruitResult(
+    @Json(name = "status") val status: Int,
+    @Json(name = "recruitment_number") val recruitmentNumber: Int,
+    @Json(name = "participation_number") val participationNumber: Int,
+    @Json(name = "message") val message: String,
+    @Json(name = "congestion_level") val congestionLevel: Int
+)

@@ -6,6 +6,13 @@ import android.os.Bundle
 import android.widget.Toast
 import androidx.appcompat.app.AppCompatActivity
 
+/**
+ * MSAider
+ *
+ * Created by Dio_V on 2019-03-23.
+ * Copyright © 2019 diov.github.io. All rights reserved.
+ */
+
 class AiderActivity : AppCompatActivity() {
 
     private val recruiter = GamewithRecruiter()
@@ -20,12 +27,17 @@ class AiderActivity : AppCompatActivity() {
     private fun analysisIntent() {
         val data = intent.data ?: return
         val order = data.schemeSpecificPart
-        recruiter.recuite(order, RecruitType.maxLuck) { outcome ->
+        recruiter.recruit(order, RecruitType.MAX_LUCK) { outcome ->
             when (outcome) {
                 is Outcome.Success -> {
-                    val link = order.split("\n")[3]
-                    val code = extractCode(link)
-                    notifyMonsterStrike(code)
+                    val result = outcome.value
+                    if (result.status == 1) {
+                        val link = order.split("\n")[3]
+                        val code = extractCode(link)
+                        notifyMonsterStrike(code)
+                    } else {
+                        Toast.makeText(this, result.message, Toast.LENGTH_LONG).show()
+                    }
                 }
                 is Outcome.Failure -> {
                     Toast.makeText(this, R.string.recruit_failed, Toast.LENGTH_LONG).show()
