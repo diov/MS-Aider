@@ -15,5 +15,5 @@ private const val STRIKE_LINK = "Monster-Strike-Link"
 fun Context.copyToClipboard(content: String) {
     val clipboardManager = getSystemService<ClipboardManager>()
     val clipData = ClipData.newPlainText(STRIKE_LINK, content)
-    clipboardManager?.primaryClip = clipData
+    clipboardManager?.setPrimaryClip(clipData)
 }
