@@ -19,14 +19,16 @@ class AiderApp : Application() {
 
         app = this
         uuid = generateUUID()
+
+        FlipperManager.setupFlipper(app)
     }
 
     private fun generateUUID(): String {
-        return buildString(144) {
-            repeat(4) {
+        return buildString {
+            repeat(5) {
                 append(UUID.randomUUID().toString().filter { it != '-' })
             }
-        }
+        }.filterIndexed { index, _ -> index < 143 }
     }
 
     companion object {

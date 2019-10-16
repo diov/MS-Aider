@@ -42,6 +42,10 @@ dependencies {
     implementation("com.squareup.moshi:moshi:1.8.0")
     kapt("com.squareup.moshi:moshi-kotlin-codegen:1.8.0")
 
+    debugImplementation("com.facebook.flipper:flipper:0.25.0")
+    debugImplementation("com.facebook.flipper:flipper-network-plugin:0.25.0")
+    debugImplementation("com.facebook.soloader:soloader:0.8.0")
+    releaseImplementation("com.facebook.flipper:flipper-noop:0.25.0")
     testImplementation("junit:junit:4.12")
     androidTestImplementation("androidx.test:runner:1.3.0-alpha02")
     androidTestImplementation("androidx.test.espresso:espresso-core:3.3.0-alpha02")
