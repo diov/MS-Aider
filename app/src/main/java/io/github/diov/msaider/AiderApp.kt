@@ -3,6 +3,9 @@ package io.github.diov.msaider
 import android.annotation.SuppressLint
 import android.app.Application
 import android.content.Context
+import com.microsoft.appcenter.AppCenter
+import com.microsoft.appcenter.analytics.Analytics
+import com.microsoft.appcenter.crashes.Crashes
 import java.util.UUID
 
 /**
@@ -21,6 +24,7 @@ class AiderApp : Application() {
         uuid = generateUUID()
 
         FlipperManager.setupFlipper(app)
+        AppCenter.start(this, APP_CENTER_KEY, Analytics::class.java, Crashes::class.java)
     }
 
     private fun generateUUID(): String {

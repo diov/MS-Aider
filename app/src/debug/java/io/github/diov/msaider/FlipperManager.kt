@@ -3,6 +3,7 @@ package io.github.diov.msaider
 import android.content.Context
 import com.facebook.flipper.android.AndroidFlipperClient
 import com.facebook.flipper.android.utils.FlipperUtils
+import com.facebook.flipper.plugins.network.FlipperOkhttpInterceptor
 import com.facebook.flipper.plugins.network.NetworkFlipperPlugin
 import com.facebook.soloader.SoLoader
 
@@ -15,7 +16,8 @@ import com.facebook.soloader.SoLoader
 
 object FlipperManager {
 
-    val networkPlugin = NetworkFlipperPlugin()
+    private val networkPlugin = NetworkFlipperPlugin()
+    val interceptor = FlipperOkhttpInterceptor(networkPlugin)
 
     fun setupFlipper(context: Context) {
         SoLoader.init(context, false)

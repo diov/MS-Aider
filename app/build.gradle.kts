@@ -19,8 +19,13 @@ android {
         testInstrumentationRunner = "androidx.test.runner.AndroidJUnitRunner"
     }
     buildTypes {
-        getByName("release") {
+        getByName("debug") {
             isMinifyEnabled = false
+            proguardFiles(getDefaultProguardFile("proguard-android-optimize.txt"), "proguard-rules.pro")
+        }
+        getByName("release") {
+            isMinifyEnabled = true
+            isShrinkResources = true
             proguardFiles(getDefaultProguardFile("proguard-android-optimize.txt"), "proguard-rules.pro")
         }
     }
@@ -33,6 +38,8 @@ tasks {
 }
 
 dependencies {
+    val appCenterSdkVersion = "2.3.0"
+
     implementation(fileTree(mapOf("dir" to "libs", "include" to listOf("*.jar"))))
     implementation(kotlin("stdlib-jdk8", KotlinCompilerVersion.VERSION))
     implementation("androidx.core:core-ktx:1.2.0-beta01")
@@ -41,6 +48,8 @@ dependencies {
     implementation("com.squareup.okhttp3:okhttp:4.2.2")
     implementation("com.squareup.moshi:moshi:1.8.0")
     kapt("com.squareup.moshi:moshi-kotlin-codegen:1.8.0")
+    implementation("com.microsoft.appcenter:appcenter-analytics:${appCenterSdkVersion}")
+    implementation("com.microsoft.appcenter:appcenter-crashes:${appCenterSdkVersion}")
 
     debugImplementation("com.facebook.flipper:flipper:0.25.0")
     debugImplementation("com.facebook.flipper:flipper-network-plugin:0.25.0")

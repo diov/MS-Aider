@@ -1,7 +1,6 @@
 package io.github.diov.msaider
 
 import android.webkit.WebSettings
-import com.facebook.flipper.plugins.network.FlipperOkhttpInterceptor
 import com.squareup.moshi.Json
 import com.squareup.moshi.JsonClass
 import com.squareup.moshi.Moshi
@@ -72,10 +71,11 @@ class GamewithRecruiter {
         private val resultAdapter by lazy {
             Moshi.Builder().build().adapter(RecruitResult::class.java)
         }
+        @Suppress("UNNECESSARY_SAFE_CALL")
         private val client by lazy {
             OkHttpClient.Builder()
                 .addInterceptor(HeaderInterceptor())
-                .addNetworkInterceptor(FlipperOkhttpInterceptor(FlipperManager.networkPlugin))
+                .apply { FlipperManager.interceptor?.run(::addNetworkInterceptor) }
                 .build()
         }
     }
