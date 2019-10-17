@@ -26,6 +26,7 @@
         </activity>
         <activity
             android:name=".AiderActivity"
+            android:launchMode="singleInstance"
             android:theme="@style/AppTheme.Transparent">
             <intent-filter>
                 <action android:name="android.intent.action.VIEW" />

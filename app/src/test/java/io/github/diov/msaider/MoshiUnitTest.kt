@@ -14,10 +14,21 @@ class MoshiUnitTest {
     @Test
     fun json_isCorrect() {
         val json = """
-            {"status":1,"recruitment_number":1,"participation_number":0,"message":"","congestion_level":1}
+            {"status":1,
+            "message":"",
+            "launch_url":"https://static.tw.monster-strike.com/sns/?pass_code=MjQzMTgyMjU1\u0026f=line",
+            "native_app_launch_url":"intent://joingame/?join=MjQzMTgyMjU1#Intent;scheme=monsterstrike-tw-app;end",
+            "expire_seconds":90}
         """.trimIndent()
         val adapter = Moshi.Builder().build().adapter(RecruitResult::class.java)
-        val result = RecruitResult(1, 1, 0, "", 1)
+        val result =
+            RecruitResult(
+                1,
+                "https://static.tw.monster-strike.com/sns/?pass_code=MjQzMTgyMjU1\u0026f=line",
+                "intent://joingame/?join=MjQzMTgyMjU1#Intent;scheme=monsterstrike-tw-app;end",
+                "",
+                90
+            )
         assertEquals(result, adapter.fromJson(json))
     }
 }

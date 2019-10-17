@@ -1,13 +1,15 @@
 package io.github.diov.msaider
 
 import android.webkit.WebSettings
+import com.facebook.flipper.plugins.network.FlipperOkhttpInterceptor
 import com.squareup.moshi.Json
 import com.squareup.moshi.JsonClass
 import com.squareup.moshi.Moshi
 import okhttp3.Call
 import okhttp3.Callback
-import okhttp3.Headers
+import okhttp3.FormBody
 import okhttp3.HttpUrl
+import okhttp3.Interceptor
 import okhttp3.OkHttpClient
 import okhttp3.Request
 import okhttp3.Response
@@ -22,17 +24,13 @@ import java.io.IOException
 
 class GamewithRecruiter {
 
-    private val resultAdapter by lazy {
-        val moshi = Moshi.Builder().build()
-        moshi.adapter(RecruitResult::class.java)
-    }
-    private val client = OkHttpClient()
-    private val userAgent by lazy {
-        WebSettings.getDefaultUserAgent(AiderApp.app)
-    }
-
-    fun recruit(order: String, type: RecruitType, callback: ((Outcome<RecruitResult>) -> Unit)? = null) {
-        val request = generateRequest(order, type)
+    fun recruit(
+        order: String,
+        type: RecruitType,
+        headCount: Int,
+        callback: ((Outcome<RecruitResult>) -> Unit)? = null
+    ) {
+        val request = generateRequest(order, type, headCount)
         client.newCall(request).enqueue(object : Callback {
             override fun onFailure(call: Call, e: IOException) {
                 callback?.invoke(Outcome.failure(e))
@@ -50,28 +48,53 @@ class GamewithRecruiter {
         })
     }
 
-    private fun generateRequest(order: String, type: RecruitType): Request {
+    private fun generateRequest(order: String, type: RecruitType, headCount: Int): Request {
         val httpUrl = HttpUrl.Builder()
             .scheme("https")
             .host(HOST)
-            .addPathSegments(PATH)
-            .addQueryParameter(BODY_PARAMETER, order)
-            .addQueryParameter(TAGS_PARAMETER, type.tag)
-            .addQueryParameter(UID_PARAMETER, AiderApp.uuid)
-            .addQueryParameter(LOCALE_PARAMETER, "zh-TW")
+            .addPathSegments(RECRUIT_PATH)
             .build()
-        val headers = Headers.Builder()
-            .add("Referer", "https://gamewith.tw/monsterstrike/lobby")
-            .add("Origin", "https://gamewith.tw")
-            .add("User-Agent", userAgent)
-            .add("DNT", "1")
-            .add("Sec-Fetch-Mode", "cors")
+        val formBody = FormBody.Builder()
+            .add(BODY_PARAMETER, order)
+            .add(TAGS_PARAMETER, type.tag)
+            .add(HEAD_COUNT_PARAMETER, "$headCount")
+            .add(UID_PARAMETER, AiderApp.uuid)
+            .add(LOCALE_PARAMETER, "zh-TW")
             .build()
+
         return Request.Builder()
-            .get()
             .url(httpUrl)
-            .headers(headers)
+            .post(formBody)
             .build()
+    }
+
+    companion object {
+        private val resultAdapter by lazy {
+            Moshi.Builder().build().adapter(RecruitResult::class.java)
+        }
+        private val client by lazy {
+            OkHttpClient.Builder()
+                .addInterceptor(HeaderInterceptor())
+                .addNetworkInterceptor(FlipperOkhttpInterceptor(FlipperManager.networkPlugin))
+                .build()
+        }
+    }
+}
+
+internal class HeaderInterceptor : Interceptor {
+    private val userAgent by lazy {
+        WebSettings.getDefaultUserAgent(AiderApp.app)
+    }
+
+    override fun intercept(chain: Interceptor.Chain): Response {
+        val request = chain.request().newBuilder().apply {
+            addHeader("Referer", "https://gamewith.tw/monsterstrike/lobby")
+            addHeader("Origin", "https://gamewith.tw")
+            addHeader("User-Agent", userAgent)
+            addHeader("DNT", "1")
+            addHeader("Sec-Fetch-Mode", "cors")
+        }.build()
+        return chain.proceed(request)
     }
 }
 
@@ -84,8 +107,8 @@ enum class RecruitType(val tag: String) {
 @JsonClass(generateAdapter = true)
 data class RecruitResult(
     @Json(name = "status") val status: Int,
-    @Json(name = "recruitment_number") val recruitmentNumber: Int,
-    @Json(name = "participation_number") val participationNumber: Int,
+    @Json(name = "launch_url") val launchUrl: String,
+    @Json(name = "native_app_launch_url") val intentUrl: String,
     @Json(name = "message") val message: String,
-    @Json(name = "congestion_level") val congestionLevel: Int
+    @Json(name = "expire_seconds") val expireSeconds: Int
 )

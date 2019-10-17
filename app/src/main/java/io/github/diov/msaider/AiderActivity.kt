@@ -1,7 +1,6 @@
 package io.github.diov.msaider
 
 import android.content.Intent
-import android.net.Uri
 import android.os.Bundle
 import android.widget.Toast
 import androidx.appcompat.app.AppCompatActivity
@@ -19,22 +18,26 @@ class AiderActivity : AppCompatActivity() {
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
-        setContentView(R.layout.activity_aider)
 
-        analysisIntent()
+        intent ?: return
+        analysis(intent)
     }
 
-    private fun analysisIntent() {
+    override fun onNewIntent(intent: Intent?) {
+        super.onNewIntent(intent)
+        intent ?: return
+        analysis(intent)
+    }
+
+    private fun analysis(intent: Intent) {
         val data = intent.data ?: return
         val order = data.schemeSpecificPart
-        recruiter.recruit(order, RecruitType.MAX_LUCK) { outcome ->
+        recruiter.recruit(order, RecruitType.MAX_LUCK, 3) { outcome ->
             when (outcome) {
                 is Outcome.Success -> {
                     val result = outcome.value
                     if (result.status == 1) {
-                        val link = order.split("\n")[3]
-                        val code = extractCode(link)
-                        notifyMonsterStrike(code)
+                        notifyMonsterStrike(result.intentUrl)
                     } else {
                         Toast.makeText(this, result.message, Toast.LENGTH_LONG).show()
                     }
@@ -47,14 +50,8 @@ class AiderActivity : AppCompatActivity() {
         copyToClipboard(order)
     }
 
-    private fun extractCode(link: String): String {
-        val linkUri = Uri.parse(link)
-        return linkUri.getQueryParameters("pass_code")[0]
-    }
-
-    private fun notifyMonsterStrike(code: String) {
-        val intent = Intent(Intent.ACTION_VIEW)
-        intent.data = Uri.parse("$MONSTER_STRIKE_SCHEME$code")
+    private fun notifyMonsterStrike(url: String) {
+        val intent = Intent.parseUri(url, Intent.URI_INTENT_SCHEME)
         startActivity(intent)
     }
 }

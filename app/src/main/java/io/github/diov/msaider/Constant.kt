@@ -5,11 +5,11 @@ package io.github.diov.msaider
  * Copyright © 2019 diov.github.io. All rights reserved.
  */
 
-const val MONSTER_STRIKE_SCHEME = "monsterstrike-tw-app://joingame/?join="
-
 const val HOST = "matching.gamewithservice.jp"
-const val PATH = "api/v1/congestion"
+const val RECRUIT_PATH = "api/v1/recruit"
+const val CANCEL_PATH = "api/v1/cancel"
 const val BODY_PARAMETER = "body"
 const val TAGS_PARAMETER = "conditions[tags][]"
+const val HEAD_COUNT_PARAMETER = "conditions[wanted_persons]"
 const val UID_PARAMETER = "uid"
 const val LOCALE_PARAMETER = "locale"
