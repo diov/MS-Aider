@@ -75,7 +75,7 @@ class GamewithRecruiter {
         private val client by lazy {
             OkHttpClient.Builder()
                 .addInterceptor(HeaderInterceptor())
-                .apply { FlipperManager.interceptor?.run(::addNetworkInterceptor) }
+                .apply { ThirdPartySDKManager.interceptor?.run(::addNetworkInterceptor) }
                 .build()
         }
     }

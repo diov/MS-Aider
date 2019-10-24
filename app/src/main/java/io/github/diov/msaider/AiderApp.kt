@@ -23,8 +23,7 @@ class AiderApp : Application() {
         app = this
         uuid = generateUUID()
 
-        FlipperManager.setupFlipper(app)
-        AppCenter.start(this, APP_CENTER_KEY, Analytics::class.java, Crashes::class.java)
+        ThirdPartySDKManager.setupFlipper(this)
     }
 
     private fun generateUUID(): String {
