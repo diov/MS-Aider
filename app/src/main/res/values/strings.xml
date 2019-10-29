@@ -5,4 +5,13 @@
     <string name="title_notifications">Notifications</string>
 
     <string name="recruit_failed">Recruit failed.</string>
+    <string name="max_luck">僅限極運</string>
+    <string name="only_correct">僅限適正角色</string>
+    <string name="anyone">誰都可以</string>
+    <string name="recruit_title">募集人數：</string>
+    <string name="recruit_three">3人</string>
+    <string name="recruit_two">2人</string>
+    <string name="recruit_one">1人</string>
+    <string name="copy_recruit">複製鏈接</string>
+    <string name="confirm_recruit">開始募集</string>
 </resources>

@@ -1,0 +1,130 @@
+<?xml version="1.0" encoding="utf-8"?>
+<androidx.constraintlayout.widget.ConstraintLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:padding="16dp"
+    tools:context=".AiderActivity">
+
+    <androidx.appcompat.widget.AppCompatTextView
+        android:id="@+id/recruitTitle"
+        android:layout_width="0dp"
+        android:layout_height="wrap_content"
+        android:gravity="center"
+        android:textAppearance="@style/TextAppearance.MaterialComponents.Headline6"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toTopOf="parent"
+        tools:text="大蛇闖江湖 ～尋求宿敵～(究極)" />
+
+    <com.google.android.material.chip.ChipGroup
+        android:id="@+id/recruitTypeGroup"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="16dp"
+        app:checkedChip="@+id/maxLuckButton"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@+id/recruitTitle"
+        app:singleSelection="true">
+
+        <com.google.android.material.chip.Chip
+            android:id="@+id/maxLuckButton"
+            style="@style/Widget.MaterialComponents.Chip.Choice"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="@string/max_luck" />
+
+        <com.google.android.material.chip.Chip
+            android:id="@+id/onlyCorrectButton"
+            style="@style/Widget.MaterialComponents.Chip.Choice"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="@string/only_correct" />
+
+        <com.google.android.material.chip.Chip
+            android:id="@+id/anyoneButton"
+            style="@style/Widget.MaterialComponents.Chip.Choice"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="@string/anyone" />
+    </com.google.android.material.chip.ChipGroup>
+
+    <androidx.appcompat.widget.AppCompatTextView
+        android:id="@+id/recruitCountTitle"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginEnd="20dp"
+        android:text="@string/recruit_title"
+        android:textAppearance="@style/TextAppearance.MaterialComponents.Subtitle1"
+        app:layout_constraintBottom_toBottomOf="@+id/recruitCountGroup"
+        app:layout_constraintEnd_toStartOf="@+id/recruitCountGroup"
+        app:layout_constraintHorizontal_chainStyle="packed"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toTopOf="@+id/recruitCountGroup" />
+
+    <com.google.android.material.chip.ChipGroup
+        android:id="@+id/recruitCountGroup"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        app:checkedChip="@+id/recruitThreeButton"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toEndOf="@+id/recruitCountTitle"
+        app:layout_constraintTop_toBottomOf="@+id/recruitTypeGroup"
+        app:singleSelection="true">
+
+        <com.google.android.material.chip.Chip
+            android:id="@+id/recruitThreeButton"
+            style="@style/Widget.MaterialComponents.Chip.Choice"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="@string/recruit_three" />
+
+        <com.google.android.material.chip.Chip
+            android:id="@+id/recruitTwoButton"
+            style="@style/Widget.MaterialComponents.Chip.Choice"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="@string/recruit_two" />
+
+        <com.google.android.material.chip.Chip
+            android:id="@+id/recruitOneButton"
+            style="@style/Widget.MaterialComponents.Chip.Choice"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="@string/recruit_one" />
+    </com.google.android.material.chip.ChipGroup>
+
+    <com.google.android.material.button.MaterialButton
+        android:id="@+id/recruitCopyButton"
+        style="@style/Widget.MaterialComponents.Button.OutlinedButton"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="16dp"
+        android:text="@string/copy_recruit"
+        app:layout_constraintEnd_toStartOf="@+id/recruitSpace"
+        app:layout_constraintHorizontal_chainStyle="packed"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@+id/recruitCountGroup" />
+
+    <Space
+        android:id="@+id/recruitSpace"
+        android:layout_width="16dp"
+        android:layout_height="wrap_content"
+        app:layout_constraintEnd_toStartOf="@id/recruitConfirmButton"
+        app:layout_constraintStart_toEndOf="@+id/recruitCopyButton"
+        app:layout_constraintTop_toBottomOf="@+id/recruitCountGroup" />
+
+
+    <com.google.android.material.button.MaterialButton
+        android:id="@+id/recruitConfirmButton"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="16dp"
+        android:text="@string/confirm_recruit"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toEndOf="@+id/recruitSpace"
+        app:layout_constraintTop_toBottomOf="@+id/recruitCountGroup" />
+
+</androidx.constraintlayout.widget.ConstraintLayout>

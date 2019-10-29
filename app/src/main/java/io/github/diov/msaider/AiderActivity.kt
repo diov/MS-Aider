@@ -32,12 +32,21 @@ class AiderActivity : AppCompatActivity() {
     private fun analysis(intent: Intent) {
         val data = intent.data ?: return
         val order = data.schemeSpecificPart
-        recruiter.recruit(order, RecruitType.MAX_LUCK, 3) { outcome ->
+        showRecruitFragment(order)
+    }
+
+    private fun showRecruitFragment(order: String) {
+        RecruitFragment.newInstance(order, ::requestRecruit).show(supportFragmentManager)
+    }
+
+    private fun requestRecruit(fragment: RecruitFragment, order: String, type: RecruitType, count: Int) {
+        recruiter.recruit(order, type, count) { outcome ->
             when (outcome) {
                 is Outcome.Success -> {
                     val result = outcome.value
                     if (result.status == 1) {
                         notifyMonsterStrike(result.intentUrl)
+                        fragment.dismissAllowingStateLoss()
                     } else {
                         Toast.makeText(this, result.message, Toast.LENGTH_LONG).show()
                     }
