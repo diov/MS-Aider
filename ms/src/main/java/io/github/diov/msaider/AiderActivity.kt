@@ -45,8 +45,8 @@ class AiderActivity : AppCompatActivity() {
                 is Outcome.Success -> {
                     val result = outcome.value
                     if (result.status == 1) {
-                        notifyMonsterStrike(result.intentUrl)
                         fragment.dismissAllowingStateLoss()
+                        notifyMonsterStrike(result.intentUrl)
                     } else {
                         Toast.makeText(this, result.message, Toast.LENGTH_LONG).show()
                     }
