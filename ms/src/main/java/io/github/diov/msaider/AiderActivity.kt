@@ -2,8 +2,10 @@ package io.github.diov.msaider
 
 import android.content.Intent
 import android.os.Bundle
-import android.widget.Toast
 import androidx.appcompat.app.AppCompatActivity
+import androidx.lifecycle.lifecycleScope
+import kotlinx.coroutines.Dispatchers
+import kotlinx.coroutines.launch
 
 /**
  * MSAider
@@ -40,23 +42,18 @@ class AiderActivity : AppCompatActivity() {
     }
 
     private fun requestRecruit(fragment: RecruitFragment, order: String, type: RecruitType, count: Int) {
-        recruiter.recruit(order, type, count) { outcome ->
-            when (outcome) {
+        lifecycleScope.launch(Dispatchers.Main) {
+            when (val outcome = recruiter.recruit(order, type, count)) {
                 is Outcome.Success -> {
-                    val result = outcome.value
-                    if (result.status == 1) {
-                        fragment.dismissAllowingStateLoss()
-                        notifyMonsterStrike(result.intentUrl)
-                    } else {
-                        Toast.makeText(this, result.message, Toast.LENGTH_LONG).show()
-                    }
+                    copyToClipboard(order)
+                    notifyMonsterStrike(outcome.value.intentUrl)
+                    fragment.dismissAllowingStateLoss()
                 }
                 is Outcome.Failure -> {
-                    Toast.makeText(this, R.string.recruit_failed, Toast.LENGTH_LONG).show()
+                    outcome.exception.printStackTrace()
                 }
             }
         }
-        copyToClipboard(order)
     }
 
     private fun notifyMonsterStrike(url: String) {

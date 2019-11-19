@@ -1,18 +1,20 @@
 package io.github.diov.msaider
 
 import android.webkit.WebSettings
-import com.squareup.moshi.Json
-import com.squareup.moshi.JsonClass
-import com.squareup.moshi.Moshi
+import kotlinx.coroutines.Dispatchers
+import kotlinx.coroutines.suspendCancellableCoroutine
+import kotlinx.coroutines.withContext
+import kotlinx.serialization.json.Json
+import kotlinx.serialization.json.JsonConfiguration
 import okhttp3.Call
-import okhttp3.Callback
 import okhttp3.FormBody
 import okhttp3.HttpUrl
 import okhttp3.Interceptor
 import okhttp3.OkHttpClient
 import okhttp3.Request
 import okhttp3.Response
-import java.io.IOException
+import kotlin.coroutines.resume
+import kotlin.coroutines.resumeWithException
 
 /**
  * MSAider
@@ -23,31 +25,25 @@ import java.io.IOException
 
 class GamewithRecruiter {
 
-    fun recruit(
-        order: String,
-        type: RecruitType,
-        headCount: Int,
-        callback: ((Outcome<RecruitResult>) -> Unit)? = null
-    ) {
-        val request = generateRequest(order, type, headCount)
-        client.newCall(request).enqueue(object : Callback {
-            override fun onFailure(call: Call, e: IOException) {
-                callback?.invoke(Outcome.failure(e))
-            }
-
-            override fun onResponse(call: Call, response: Response) {
-                try {
-                    val body = requireNotNull(response.body?.string())
-                    val result = requireNotNull(resultAdapter.fromJson(body))
-                    callback?.invoke(Outcome.success(result))
-                } catch (e: Exception) {
-                    callback?.invoke(Outcome.failure(e))
-                }
-            }
-        })
+    suspend fun recruit(order: String, type: RecruitType, headCount: Int) = withContext(Dispatchers.IO) {
+        execCatching {
+            val request = recruitRequest(order, type, headCount)
+            val response = client.newCall(request).cancellableExecute()
+            val body = requireNotNull(response.body?.string())
+            json.parse(RecruitResult.serializer(), body)
+        }
     }
 
-    private fun generateRequest(order: String, type: RecruitType, headCount: Int): Request {
+    suspend fun fetch() = withContext(Dispatchers.IO) {
+        execCatching {
+            val request = fetchRequest()
+            val response = client.newCall(request).cancellableExecute()
+            val body = requireNotNull(response.body?.string())
+            json.parse(OrderBoard.serializer(), body)
+        }
+    }
+
+    private fun recruitRequest(order: String, type: RecruitType, headCount: Int): Request {
         val httpUrl = HttpUrl.Builder()
             .scheme("https")
             .host(HOST)
@@ -63,13 +59,29 @@ class GamewithRecruiter {
 
         return Request.Builder()
             .url(httpUrl)
+            .get()
             .post(formBody)
             .build()
     }
 
+    private fun fetchRequest(): Request {
+        val httpUrl = HttpUrl.Builder()
+            .scheme("https")
+            .host(HOST)
+            .addPathSegment(RECRUIT_PATH)
+            .addEncodedQueryParameter(CATEGORY_PARAMETER, "1")
+            .addEncodedQueryParameter(LOCALE_PARAMETER, "zh-TW")
+            .addEncodedQueryParameter(UID_PARAMETER, AiderApp.uuid)
+            .build()
+        return Request.Builder()
+            .url(httpUrl)
+            .get()
+            .build()
+    }
+
     companion object {
-        private val resultAdapter by lazy {
-            Moshi.Builder().build().adapter(RecruitResult::class.java)
+        private val json by lazy {
+            Json(JsonConfiguration.Stable)
         }
         @Suppress("UNNECESSARY_SAFE_CALL")
         private val client by lazy {
@@ -104,11 +116,13 @@ enum class RecruitType(val tag: String) {
     ANYONE("誰都可以")
 }
 
-@JsonClass(generateAdapter = true)
-data class RecruitResult(
-    @Json(name = "status") val status: Int,
-    @Json(name = "launch_url") val launchUrl: String,
-    @Json(name = "native_app_launch_url") val intentUrl: String,
-    @Json(name = "message") val message: String,
-    @Json(name = "expire_seconds") val expireSeconds: Int
-)
+suspend inline fun Call.cancellableExecute(): Response = suspendCancellableCoroutine { continuation ->
+    continuation.invokeOnCancellation {
+        cancel()
+    }
+    try {
+        continuation.resume(execute())
+    } catch (t: Throwable) {
+        continuation.resumeWithException(t)
+    }
+}

@@ -10,8 +10,13 @@ import androidx.appcompat.app.AppCompatActivity
 import androidx.core.app.NotificationCompat
 import androidx.core.app.NotificationManagerCompat
 import androidx.core.net.toUri
-import com.google.android.material.bottomnavigation.BottomNavigationView
-import kotlinx.android.synthetic.main.activity_main.*
+import androidx.lifecycle.lifecycleScope
+import androidx.recyclerview.widget.DividerItemDecoration
+import androidx.recyclerview.widget.LinearLayoutManager
+import androidx.recyclerview.widget.RecyclerView
+import kotlinx.android.synthetic.main.activity_order_board.*
+import kotlinx.coroutines.Dispatchers
+import kotlinx.coroutines.launch
 import java.util.concurrent.TimeUnit
 
 /**
@@ -21,27 +26,7 @@ import java.util.concurrent.TimeUnit
  * Copyright © 2019 diov.github.io. All rights reserved.
  */
 
-class MainActivity : AppCompatActivity() {
-
-    private val mOnNavigationItemSelectedListener = BottomNavigationView.OnNavigationItemSelectedListener { item ->
-        when (item.itemId) {
-            R.id.navigation_home -> {
-                message.setText(R.string.title_home)
-                sendIntent()
-                return@OnNavigationItemSelectedListener true
-            }
-            R.id.navigation_dashboard -> {
-                message.setText(R.string.title_dashboard)
-                displayNotification()
-                return@OnNavigationItemSelectedListener true
-            }
-            R.id.navigation_notifications -> {
-                message.setText(R.string.title_notifications)
-                return@OnNavigationItemSelectedListener true
-            }
-        }
-        false
-    }
+class OrderBoardActivity : AppCompatActivity() {
 
     private fun sendIntent() {
         val intent = Intent(Intent.ACTION_VIEW)
@@ -71,10 +56,35 @@ https://static.tw.monster-strike.com/sns/?pass_code=MjQzMTgyMjU1&f=line
         }
     }
 
+    private val adapter = OrderAdapter()
+
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
-        setContentView(R.layout.activity_main)
+        setContentView(R.layout.activity_order_board)
 
-        navigation.setOnNavigationItemSelectedListener(mOnNavigationItemSelectedListener)
+        setupView()
+    }
+
+    private fun setupView() {
+        orderListView.layoutManager = LinearLayoutManager(this)
+        orderListView.adapter = adapter
+        orderListView.addItemDecoration(DividerItemDecoration(this, RecyclerView.VERTICAL))
+
+        refreshButton.setOnClickListener {
+            refreshOrder()
+        }
+    }
+
+    private fun refreshOrder() {
+        lifecycleScope.launch(Dispatchers.Main) {
+            when (val outcome = GamewithRecruiter().fetch()) {
+                is Outcome.Success -> {
+                    adapter.update(outcome.value.orders)
+                }
+                is Outcome.Failure -> {
+                    outcome.exception.printStackTrace()
+                }
+            }
+        }
     }
 }

@@ -5,6 +5,7 @@ plugins {
     id("com.android.application")
     kotlin("android")
     kotlin("android.extensions")
+    id("kotlinx-serialization") version "1.3.50"
     kotlin("kapt")
 }
 
@@ -34,6 +35,7 @@ android {
 tasks {
     withType<KotlinCompile> {
         kotlinOptions.jvmTarget = "1.8"
+        kotlinOptions.languageVersion = "1.4"
     }
 }
 
@@ -42,12 +44,13 @@ dependencies {
 
     implementation(fileTree(mapOf("dir" to "libs", "include" to listOf("*.jar"))))
     implementation(kotlin("stdlib-jdk8", KotlinCompilerVersion.VERSION))
-    implementation("androidx.core:core-ktx:1.2.0-beta01")
-    implementation("com.google.android.material:material:1.1.0-beta01")
+    implementation("androidx.core:core-ktx:1.2.0-beta02")
+    implementation("com.google.android.material:material:1.2.0-alpha01")
+    implementation("androidx.lifecycle:lifecycle-runtime-ktx:2.2.0-rc02")
     implementation("androidx.constraintlayout:constraintlayout:1.1.3")
     implementation("com.squareup.okhttp3:okhttp:4.2.2")
-    implementation("com.squareup.moshi:moshi:1.8.0")
-    kapt("com.squareup.moshi:moshi-kotlin-codegen:1.8.0")
+    implementation("org.jetbrains.kotlinx:kotlinx-serialization-runtime:0.13.0")
+    implementation("io.coil-kt:coil:0.8.0")
     implementation("com.microsoft.appcenter:appcenter-analytics:${appCenterSdkVersion}")
     implementation("com.microsoft.appcenter:appcenter-crashes:${appCenterSdkVersion}")
 

@@ -20,3 +20,11 @@ sealed class Outcome<T> {
             Failure(exception)
     }
 }
+
+inline fun <R> execCatching(block: () -> R): Outcome<R> {
+    return try {
+        Outcome.success(block())
+    } catch (e: Throwable) {
+        Outcome.failure(e)
+    }
+}
