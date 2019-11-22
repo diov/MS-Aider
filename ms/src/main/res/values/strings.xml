@@ -14,4 +14,9 @@
     <string name="recruit_one">1人</string>
     <string name="copy_recruit">複製鏈接</string>
     <string name="confirm_recruit">開始募集</string>
+
+    <string name="service_gamewith">MonsterStrike Aider</string>
+    <string name="notification_recruit_processing">正在募集</string>
+    <string name="notification_cancel">取消</string>
+    <string name="notification_recruit_finished">募集結束</string>
 </resources>

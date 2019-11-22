@@ -2,10 +2,11 @@ package io.github.diov.msaider
 
 import android.annotation.SuppressLint
 import android.app.Application
+import android.app.NotificationChannel
+import android.app.NotificationManager
 import android.content.Context
-import com.microsoft.appcenter.AppCenter
-import com.microsoft.appcenter.analytics.Analytics
-import com.microsoft.appcenter.crashes.Crashes
+import android.os.Build
+import androidx.core.content.getSystemService
 import java.util.UUID
 
 /**
@@ -23,7 +24,20 @@ class AiderApp : Application() {
         app = this
         uuid = generateUUID()
 
-        ThirdPartySDKManager.setupFlipper(this)
+        updateNotificationChannels()
+        ThirdPartySDKManager.setup(this)
+    }
+
+    private fun updateNotificationChannels() {
+        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.O) {
+            val notificationManager = app.getSystemService<NotificationManager>()!!
+            notificationManager.createNotificationChannel(
+                NotificationChannel(
+                    GamewithService.CHANNEL, app.getText(R.string.service_gamewith),
+                    NotificationManager.IMPORTANCE_LOW
+                )
+            )
+        }
     }
 
     private fun generateUUID(): String {

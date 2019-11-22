@@ -4,7 +4,9 @@
     package="io.github.diov.msaider">
 
     <dist:module dist:instant="true" />
+
     <uses-permission android:name="android.permission.INTERNET" />
+    <uses-permission android:name="android.permission.FOREGROUND_SERVICE" />
 
     <application
         android:name=".AiderApp"
@@ -36,6 +38,8 @@
                     android:scheme="line" />
             </intent-filter>
         </activity>
+
+        <service android:name=".GamewithService" />
     </application>
 
 </manifest>

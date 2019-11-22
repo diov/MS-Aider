@@ -16,11 +16,12 @@ import kotlinx.coroutines.launch
 
 class AiderActivity : AppCompatActivity() {
 
-    private val recruiter = GamewithRecruiter()
+    private val connection = GamewithConnection()
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
 
+        connection.connect(this)
         intent ?: return
         analysis(intent)
     }
@@ -29,6 +30,12 @@ class AiderActivity : AppCompatActivity() {
         super.onNewIntent(intent)
         intent ?: return
         analysis(intent)
+    }
+
+    override fun onDestroy() {
+        super.onDestroy()
+
+        connection.disconnect(this)
     }
 
     private fun analysis(intent: Intent) {
@@ -43,14 +50,16 @@ class AiderActivity : AppCompatActivity() {
 
     private fun requestRecruit(fragment: RecruitFragment, order: String, type: RecruitType, count: Int) {
         lifecycleScope.launch(Dispatchers.Main) {
-            when (val outcome = recruiter.recruit(order, type, count)) {
-                is Outcome.Success -> {
-                    copyToClipboard(order)
-                    notifyMonsterStrike(outcome.value.intentUrl)
-                    fragment.dismissAllowingStateLoss()
-                }
-                is Outcome.Failure -> {
-                    outcome.exception.printStackTrace()
+            connection.recruit(order, type, count) { outcome ->
+                when (outcome) {
+                    is Outcome.Success -> {
+                        copyToClipboard(order)
+                        notifyMonsterStrike(outcome.value.intentUrl)
+                        fragment.dismissAllowingStateLoss()
+                    }
+                    is Outcome.Failure -> {
+                        outcome.exception.printStackTrace()
+                    }
                 }
             }
         }

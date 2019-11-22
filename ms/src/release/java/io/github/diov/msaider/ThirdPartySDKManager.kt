@@ -19,7 +19,11 @@ object ThirdPartySDKManager {
 
     val interceptor: Interceptor? = null
 
-    fun setupFlipper(application: Application) {
+    fun setup(application: Application) {
         AppCenter.start(application, APP_CENTER_KEY, Analytics::class.java, Crashes::class.java)
+    }
+
+    fun trackException(e: Exception) {
+        Crashes.trackError(e)
     }
 }

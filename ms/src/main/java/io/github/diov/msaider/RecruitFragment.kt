@@ -58,11 +58,6 @@ class RecruitFragment : BottomSheetDialogFragment() {
         }
     }
 
-    override fun onDismiss(dialog: DialogInterface) {
-        super.onDismiss(dialog)
-        activity?.finish()
-    }
-
     fun show(manager: FragmentManager) {
         super.show(manager, TAG)
     }
