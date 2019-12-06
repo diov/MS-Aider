@@ -7,6 +7,7 @@ package io.github.diov.msaider
 
 const val HOST = "matching.gamewithservice.jp"
 const val RECRUIT_PATH = "api/v1/recruit"
+const val PARTICIPATE_PATH = "api/v1/participate"
 const val CANCEL_PATH = "api/v1/cancel"
 const val CATEGORY_PARAMETER = "category_id"
 const val BODY_PARAMETER = "body"

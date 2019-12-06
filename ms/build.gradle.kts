@@ -49,6 +49,7 @@ dependencies {
     implementation("androidx.lifecycle:lifecycle-extensions:2.2.0-rc02")
     implementation("androidx.lifecycle:lifecycle-runtime-ktx:2.2.0-rc02")
     implementation("androidx.constraintlayout:constraintlayout:1.1.3")
+    implementation("androidx.browser:browser:1.2.0-beta01")
     implementation("com.squareup.okhttp3:okhttp:4.2.2")
     implementation("org.jetbrains.kotlinx:kotlinx-serialization-runtime:0.13.0")
     implementation("io.coil-kt:coil:0.8.0")

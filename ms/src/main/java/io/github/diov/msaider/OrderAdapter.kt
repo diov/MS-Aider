@@ -16,7 +16,7 @@ import kotlinx.android.synthetic.main.item_order.view.*
  * Copyright © 2019 diov.github.io. All rights reserved.
  */
 
-class OrderAdapter : RecyclerView.Adapter<OrderAdapter.OrderViewHolder>() {
+class OrderAdapter(private val delegate: OrderAdapterDelegate) : RecyclerView.Adapter<OrderAdapter.OrderViewHolder>() {
 
     private var orderList: Array<Order> = emptyArray()
 
@@ -44,6 +44,13 @@ class OrderAdapter : RecyclerView.Adapter<OrderAdapter.OrderViewHolder>() {
             containerView.orderTag.text = order.quest.level
             containerView.orderTitle.text = order.quest.name
             containerView.orderLevel.text = order.conditions.tags[0]
+            containerView.orderIcon.setOnClickListener { delegate.onIconClicked(order.quest) }
+            containerView.setOnClickListener { delegate.onItemClicked(order) }
         }
     }
+}
+
+interface OrderAdapterDelegate {
+    fun onIconClicked(quest: Quest)
+    fun onItemClicked(order: Order)
 }

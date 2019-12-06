@@ -5,6 +5,9 @@ package io.github.diov.msaider
 import android.content.ClipData
 import android.content.ClipboardManager
 import android.content.Context
+import android.net.Uri
+import androidx.browser.customtabs.CustomTabsIntent
+import androidx.core.content.ContextCompat
 import androidx.core.content.getSystemService
 import androidx.core.view.children
 import com.google.android.material.chip.Chip
@@ -29,4 +32,14 @@ inline fun ChipGroup.actAsRadioGroup() {
         children.forEach { it.isClickable = true }
         chip.isClickable = false
     }
+}
+
+inline fun Context.openChrome(url: String) {
+    val customTabsIntent = CustomTabsIntent.Builder()
+        .setToolbarColor(ContextCompat.getColor(this, R.color.colorPrimary))
+        .setShowTitle(true)
+        .addDefaultShareMenuItem()
+        .enableUrlBarHiding()
+        .build()
+    customTabsIntent.launchUrl(this, Uri.parse(url))
 }

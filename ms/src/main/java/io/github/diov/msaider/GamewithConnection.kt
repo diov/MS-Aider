@@ -40,7 +40,7 @@ class GamewithConnection : ServiceConnection {
 
     override fun onServiceConnected(name: ComponentName?, service: IBinder?) {
         val binder = service as GamewithService.Binder
-        this@GamewithConnection.service = binder.getService()
+        this.service = binder.getService()
     }
 
     suspend fun recruit(order: String, type: RecruitType, count: Int, callback: (Outcome<RecruitResult>) -> Unit) {
