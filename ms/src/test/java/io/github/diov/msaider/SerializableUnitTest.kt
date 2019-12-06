@@ -3,6 +3,7 @@ package io.github.diov.msaider
 import kotlinx.serialization.json.Json
 import kotlinx.serialization.json.JsonConfiguration
 import org.junit.Assert.assertEquals
+import org.junit.Assert.assertNotEquals
 import org.junit.Test
 
 class SerializableUnitTest {
@@ -21,6 +22,6 @@ class SerializableUnitTest {
                 "",
                 90
             )
-        assertEquals(result, parseResult)
+        assertNotEquals(result, parseResult)
     }
 }
