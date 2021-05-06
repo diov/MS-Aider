@@ -5,6 +5,7 @@ package io.github.diov.msaider
  * Copyright © 2019 diov.github.io. All rights reserved.
  */
 
+const val HTTPS_SCHEME = "https"
 const val HOST = "matching.gamewithservice.jp"
 const val RECRUIT_PATH = "api/v1/recruit"
 const val PARTICIPATE_PATH = "api/v1/participate"

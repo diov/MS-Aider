@@ -33,13 +33,3 @@ inline fun ChipGroup.actAsRadioGroup() {
         chip.isClickable = false
     }
 }
-
-inline fun Context.openChrome(url: String) {
-    val customTabsIntent = CustomTabsIntent.Builder()
-        .setToolbarColor(ContextCompat.getColor(this, R.color.colorPrimary))
-        .setShowTitle(true)
-        .addDefaultShareMenuItem()
-        .enableUrlBarHiding()
-        .build()
-    customTabsIntent.launchUrl(this, Uri.parse(url))
-}

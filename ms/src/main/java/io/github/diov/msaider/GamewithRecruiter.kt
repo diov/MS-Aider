@@ -5,7 +5,6 @@ import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.suspendCancellableCoroutine
 import kotlinx.coroutines.withContext
 import kotlinx.serialization.json.Json
-import kotlinx.serialization.json.JsonConfiguration
 import okhttp3.Call
 import okhttp3.FormBody
 import okhttp3.HttpUrl
@@ -30,7 +29,7 @@ class GamewithRecruiter {
             val request = recruitRequest(order, type, headCount)
             val response = client.newCall(request).cancellableExecute()
             val body = requireNotNull(response.body?.string())
-            json.parse(RecruitResult.serializer(), body)
+            json.decodeFromString(RecruitResult.serializer(), body)
         }
     }
 
@@ -39,13 +38,13 @@ class GamewithRecruiter {
             val request = fetchRequest()
             val response = client.newCall(request).cancellableExecute()
             val body = requireNotNull(response.body?.string())
-            json.parse(OrderBoard.serializer(), body)
+            json.decodeFromString(OrderBoard.serializer(), body)
         }
     }
 
     private fun recruitRequest(order: String, type: RecruitType, headCount: Int): Request {
         val httpUrl = HttpUrl.Builder()
-            .scheme("https")
+            .scheme(HTTPS_SCHEME)
             .host(HOST)
             .addPathSegments(RECRUIT_PATH)
             .build()
@@ -66,7 +65,7 @@ class GamewithRecruiter {
 
     private fun fetchRequest(): Request {
         val httpUrl = HttpUrl.Builder()
-            .scheme("https")
+            .scheme(HTTPS_SCHEME)
             .host(HOST)
             .addPathSegment(RECRUIT_PATH)
             .addEncodedQueryParameter(CATEGORY_PARAMETER, "1")
@@ -80,9 +79,8 @@ class GamewithRecruiter {
     }
 
     companion object {
-        private val json by lazy {
-            Json(JsonConfiguration.Stable)
-        }
+        private val json by lazy { Json {} }
+
         @Suppress("UNNECESSARY_SAFE_CALL")
         private val client by lazy {
             OkHttpClient.Builder()

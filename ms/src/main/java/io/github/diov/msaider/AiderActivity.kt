@@ -14,7 +14,7 @@ import kotlinx.coroutines.launch
  * Copyright © 2019 diov.github.io. All rights reserved.
  */
 
-class AiderActivity : AppCompatActivity() {
+class AiderActivity : AppCompatActivity(), RecruitFragment.RecruitDelegate {
 
     private val connection = GamewithConnection()
 
@@ -45,17 +45,20 @@ class AiderActivity : AppCompatActivity() {
     }
 
     private fun showRecruitFragment(order: String) {
-        RecruitFragment.newInstance(order, ::requestRecruit).show(supportFragmentManager)
+        RecruitFragment.newInstance(order).show(supportFragmentManager)
     }
 
-    private fun requestRecruit(fragment: RecruitFragment, order: String, type: RecruitType, count: Int) {
+    override fun canceled() {
+        finish()
+    }
+
+    override fun recruit(order: String, type: RecruitType, count: Int) {
         lifecycleScope.launch(Dispatchers.Main) {
             connection.recruit(order, type, count) { outcome ->
                 when (outcome) {
                     is Outcome.Success -> {
                         copyToClipboard(order)
                         notifyMonsterStrike(outcome.value.intentUrl)
-                        fragment.dismissAllowingStateLoss()
                     }
                     is Outcome.Failure -> {
                         outcome.exception.printStackTrace()
@@ -68,5 +71,6 @@ class AiderActivity : AppCompatActivity() {
     private fun notifyMonsterStrike(url: String) {
         val intent = Intent.parseUri(url, Intent.URI_INTENT_SCHEME)
         startActivity(intent)
+        finish()
     }
 }

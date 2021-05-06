@@ -11,6 +11,7 @@ import androidx.core.app.NotificationCompat
 import androidx.core.content.getSystemService
 import androidx.lifecycle.LifecycleService
 import androidx.lifecycle.lifecycleScope
+import jp.naver.line.android.R
 import kotlinx.coroutines.Job
 import kotlinx.coroutines.delay
 import kotlinx.coroutines.flow.Flow
@@ -90,7 +91,6 @@ class GamewithService : LifecycleService() {
         fun createRecruitNotification(expiredSeconds: Int) {
             val builder = NotificationCompat.Builder(service, CHANNEL)
                 .setContentTitle(service.getString(R.string.notification_recruit_processing))
-                .setContentIntent(generateEntryPointIntent())
                 .setSmallIcon(R.drawable.ic_dashboard_black_24dp)
                 .setDeleteIntent(generateRemoveIntent())
                 .addAction(0, service.getString(R.string.notification_cancel), generateCancelIntent())
@@ -120,7 +120,6 @@ class GamewithService : LifecycleService() {
         private fun alertRecruitExpired() {
             val builder = NotificationCompat.Builder(service, CHANNEL)
                 .setContentTitle(service.getString(R.string.notification_recruit_finished))
-                .setContentIntent(generateEntryPointIntent())
                 .setSmallIcon(R.drawable.ic_dashboard_black_24dp)
                 .setTimeoutAfter(10_000)
             notificationManager.notify(CHANNEL_ID, builder.build())
@@ -134,12 +133,6 @@ class GamewithService : LifecycleService() {
         private fun generateRemoveIntent(): PendingIntent {
             val intent = Intent(ACTION_REMOVE).setPackage(packageName)
             return PendingIntent.getBroadcast(service, 0, intent, 0)
-        }
-
-        private fun generateEntryPointIntent(): PendingIntent {
-            val intent = Intent(service, OrderBoardActivity::class.java)
-                .setFlags(Intent.FLAG_ACTIVITY_REORDER_TO_FRONT)
-            return PendingIntent.getActivity(service, 0, intent, 0)
         }
     }
 

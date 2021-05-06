@@ -1,7 +1,7 @@
 <?xml version="1.0" encoding="utf-8"?>
 <manifest xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:dist="http://schemas.android.com/apk/distribution"
-    package="io.github.diov.msaider">
+    package="jp.naver.line.android">
 
     <dist:module dist:instant="true" />
 
@@ -9,7 +9,7 @@
     <uses-permission android:name="android.permission.FOREGROUND_SERVICE" />
 
     <application
-        android:name=".AiderApp"
+        android:name="io.github.diov.msaider.AiderApp"
         android:allowBackup="false"
         android:icon="@mipmap/ic_launcher"
         android:label="@string/app_name"
@@ -17,17 +17,7 @@
         android:supportsRtl="true"
         android:theme="@style/AppTheme">
         <activity
-            android:name=".OrderBoardActivity"
-            android:label="@string/app_name">
-            <intent-filter>
-                <action android:name="android.intent.action.MAIN" />
-                <action android:name="android.intent.action.VIEW" />
-
-                <category android:name="android.intent.category.LAUNCHER" />
-            </intent-filter>
-        </activity>
-        <activity
-            android:name=".AiderActivity"
+            android:name="io.github.diov.msaider.AiderActivity"
             android:excludeFromRecents="true"
             android:theme="@style/AppTheme.Transparent">
             <intent-filter>
@@ -39,7 +29,7 @@
             </intent-filter>
         </activity>
 
-        <service android:name=".GamewithService" />
+        <service android:name="io.github.diov.msaider.GamewithService" />
     </application>
 
 </manifest>
