@@ -11,7 +11,7 @@ plugins {
 android {
     compileSdkVersion(30)
     defaultConfig {
-        applicationId = "jp.naver.line.android"
+        applicationId = "io.github.diov.msaider"
         minSdkVersion(21)
         targetSdkVersion(30)
         versionCode = 1
@@ -46,7 +46,7 @@ tasks {
 }
 
 dependencies {
-    val appCenterSdkVersion = "2.5.0"
+    val appCenterSdkVersion = "4.1.0"
 
     implementation(fileTree(mapOf("dir" to "libs", "include" to listOf("*.jar"))))
     implementation(kotlin("stdlib-jdk8", KotlinCompilerVersion.VERSION))
@@ -67,6 +67,6 @@ dependencies {
     debugImplementation("com.facebook.soloader:soloader:0.10.1")
     releaseImplementation("com.facebook.flipper:flipper-noop:0.87.0")
     testImplementation("junit:junit:4.13.2")
-    androidTestImplementation("androidx.test:runner:1.4.0-alpha04")
+    androidTestImplementation("androidx.test:runner:1.4.0-alpha06")
     androidTestImplementation("androidx.test.espresso:espresso-core:3.4.0-alpha06")
 }
