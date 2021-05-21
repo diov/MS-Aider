@@ -16,3 +16,5 @@ const val TAGS_PARAMETER = "conditions[tags][]"
 const val HEAD_COUNT_PARAMETER = "conditions[wanted_persons]"
 const val UID_PARAMETER = "uid"
 const val LOCALE_PARAMETER = "locale"
+
+

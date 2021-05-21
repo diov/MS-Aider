@@ -8,8 +8,7 @@ import android.view.ViewGroup
 import androidx.core.os.bundleOf
 import androidx.fragment.app.FragmentManager
 import com.google.android.material.bottomsheet.BottomSheetDialogFragment
-import jp.naver.line.android.R
-import jp.naver.line.android.databinding.FragmentRecruitBinding
+import io.github.diov.msaider.databinding.FragmentRecruitBinding
 
 /**
  * MSAider

@@ -7,7 +7,6 @@ import android.app.NotificationManager
 import android.content.Context
 import android.os.Build
 import androidx.core.content.getSystemService
-import jp.naver.line.android.R
 import java.util.UUID
 
 /**

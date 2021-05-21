@@ -11,7 +11,6 @@ import androidx.core.app.NotificationCompat
 import androidx.core.content.getSystemService
 import androidx.lifecycle.LifecycleService
 import androidx.lifecycle.lifecycleScope
-import jp.naver.line.android.R
 import kotlinx.coroutines.Job
 import kotlinx.coroutines.delay
 import kotlinx.coroutines.flow.Flow
